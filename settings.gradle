@@ -1,3 +1,4 @@
 rootProject.name = '2022-12-otus-java-razumkov'
 include 'L01-gradle'
 include 'L04-generics'
+include 'L06-annotations'
