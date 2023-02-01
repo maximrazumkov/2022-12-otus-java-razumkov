@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.service;
 
 import static ru.otus.util.ReflectionHelper.callMethod;
 import static ru.otus.util.ReflectionHelper.getClassForName;
@@ -15,15 +15,11 @@ import ru.otus.annotation.Test;
 import ru.otus.dto.StatisticDto;
 import ru.otus.dto.TestClassWrapperDto;
 
-public class ReflectionTestUnit {
+public class ReflectionTestUnitService implements TestUnitService {
 
     private final static String TEMPLATE_STATISTIC = "Class - %s: \n  success: %s\n  fail: %s\n  total: %s\n";
 
-    public static void main(String[] args) {
-        new ReflectionTestUnit().start(args);
-    }
-
-    private void start(String... testClass) {
+    public void test(String... testClass) {
         List<TestClassWrapperDto> testClassList = parseTestClass(testClass);
         testClassList.forEach(this::invokeTestClass);
         List<String> statistic = getStatisticList(testClassList, TEMPLATE_STATISTIC);
