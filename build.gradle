@@ -1,6 +1,7 @@
 plugins {
     id "io.spring.dependency-management" version "1.1.0"
     id 'com.github.johnrengelman.shadow' version '7.1.2' apply false
+    id 'net.ltgt.apt' version '0.10' apply false
 }
 
 allprojects {
@@ -20,6 +21,7 @@ allprojects {
                 mavenBom "com.google.protobuf:protobuf-bom:3.21.12"
             }
             dependency "com.google.guava:guava:${Versions.guava}"
+            dependency "org.projectlombok:lombok:${Versions.lombok}"
         }
     }
 }
