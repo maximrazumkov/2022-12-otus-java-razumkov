@@ -22,12 +22,13 @@ import ru.otus.atm.domain.BanknoteDenomination;
 import ru.otus.atm.exception.IncorrectAmountException;
 import ru.otus.atm.exception.UnableGiveMoneyException;
 import ru.otus.atm.exception.NotEnoughMoneyException;
-import ru.otus.atm.service.impl.VirtualAtm;
+import ru.otus.atm.service.atm.Atm;
+import ru.otus.atm.service.atm.impl.VirtualAtmBuilder;
 
 @DisplayName("Класс VirtualAtm")
 public class VirtualAtmTest {
 
-    private VirtualAtm atm;
+    private Atm atm;
     private List<BanknoteDenomination> banknoteList;
 
     private static Stream<Arguments> generateData() {
@@ -58,12 +59,12 @@ public class VirtualAtmTest {
 
     @BeforeEach
     void setUp() {
-        var moneyBox = new HashMap<BanknoteDenomination, Long>();
-        moneyBox.put(FIVE_THOUSANDTH_BANKNOTE, 0L);
-        moneyBox.put(FIVE_HUNDREDTH_BANKNOTE, 15L);
-        moneyBox.put(ONE_THOUSANDTH_BANKNOTE, 35L);
-        moneyBox.put(ONE_HUNDREDTH_BANKNOTE, 20L);
-        atm = new VirtualAtm(moneyBox);
+        atm = VirtualAtmBuilder.getBuilder()
+            .setBanknote(FIVE_THOUSANDTH_BANKNOTE, 0L)
+            .setBanknote(FIVE_HUNDREDTH_BANKNOTE, 15L)
+            .setBanknote(ONE_THOUSANDTH_BANKNOTE, 35L)
+            .setBanknote(ONE_HUNDREDTH_BANKNOTE, 20L)
+            .build();
 
        banknoteList = List.of(
             FIVE_HUNDREDTH_BANKNOTE,
@@ -106,10 +107,10 @@ public class VirtualAtmTest {
     @Test
     @DisplayName("Должен вернуть денежные средства со счета когда не все ячейки в банкомате")
     void shouldGiveMoneyWhenNotAllBoxBanknote() {
-        var boxMoney = new HashMap<BanknoteDenomination, Long>();
-        boxMoney.put(ONE_HUNDREDTH_BANKNOTE, 15L);
-        boxMoney.put(FIVE_THOUSANDTH_BANKNOTE, 5L);
-        VirtualAtm atm = new VirtualAtm(boxMoney);
+        Atm atm = VirtualAtmBuilder.getBuilder()
+            .setBanknote(ONE_HUNDREDTH_BANKNOTE, 15L)
+            .setBanknote(FIVE_THOUSANDTH_BANKNOTE, 5L)
+            .build();
 
         var expectedMoney = new HashMap<BanknoteDenomination, Long>();
         expectedMoney.put(FIVE_THOUSANDTH_BANKNOTE, 0L);

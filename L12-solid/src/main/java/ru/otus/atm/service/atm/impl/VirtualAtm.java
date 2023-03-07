@@ -1,28 +1,29 @@
-package ru.otus.atm.service.impl;
+package ru.otus.atm.service.atm.impl;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
 import ru.otus.atm.domain.BanknoteDenomination;
-import ru.otus.atm.domain.BanknoteInfo;
+import ru.otus.atm.domain.InterimCalculationResult;
 import ru.otus.atm.exception.IncorrectAmountException;
 import ru.otus.atm.exception.UnableGiveMoneyException;
 import ru.otus.atm.exception.NotEnoughMoneyException;
-import ru.otus.atm.service.GettingMoney;
-import ru.otus.atm.service.GettingRemaining;
-import ru.otus.atm.service.PuttingMoney;
+import ru.otus.atm.service.atm.Atm;
+import ru.otus.atm.service.atm.MoneyBox;
 
-@RequiredArgsConstructor
-public class VirtualAtm implements GettingRemaining, GettingMoney, PuttingMoney {
+public class VirtualAtm implements Atm {
 
-    final static String NOT_ENOUGH_MONEY = "There are not enough money";
-    final static String UNABLE_GIVE_AMOUNT = "Unable to give requested amount";
-    final static String INCORRECT_AMOUNT = "Incorrect amount";
+    private final static String NOT_ENOUGH_MONEY = "There are not enough money";
+    private final static String UNABLE_GIVE_AMOUNT = "Unable to give requested amount";
+    private final static String INCORRECT_AMOUNT = "Incorrect amount";
 
-    final Map<BanknoteDenomination, Long> moneyBox;
+    private final MoneyBox moneyBox;
+
+    VirtualAtm(MoneyBox moneyBox) {
+        this.moneyBox = moneyBox;
+    }
 
     @Override
     public Map<BanknoteDenomination, Long> getMoney(long requestedAmount) {
@@ -48,7 +49,7 @@ public class VirtualAtm implements GettingRemaining, GettingMoney, PuttingMoney 
 
     private long getRemainingAmountByRequestedAmount(long requestedAmount) {
         return Arrays.stream(BanknoteDenomination.values())
-            .filter(moneyBox::containsKey)
+            .filter(moneyBox::containsBanknotes)
             .reduce(requestedAmount, this::reduceRemainingAmount, Long::sum);
     }
 
@@ -56,26 +57,26 @@ public class VirtualAtm implements GettingRemaining, GettingMoney, PuttingMoney 
         return partialResult - getBanknoteInfo(partialResult, banknoteDenomination).amountBanknote();
     }
 
-    private BanknoteInfo getBanknoteInfo(long remainingAmount, BanknoteDenomination banknoteDenomination) {
+    private InterimCalculationResult getBanknoteInfo(long remainingAmount, BanknoteDenomination banknoteDenomination) {
         long countNeedBanknote = remainingAmount / banknoteDenomination.getBanknote();
-        long countMoneyBoxBanknote = Optional.ofNullable(moneyBox.get(banknoteDenomination)).orElse(0L);
+        long countMoneyBoxBanknote = Optional.of(moneyBox.getBanknotes(banknoteDenomination)).orElse(0L);
         long remainingBanknotes = countMoneyBoxBanknote - countNeedBanknote;
         long count = remainingBanknotes < 0 ? countMoneyBoxBanknote : countNeedBanknote;
         long amount = count * banknoteDenomination.getBanknote();
-        return new BanknoteInfo(countNeedBanknote, amount, remainingBanknotes, countMoneyBoxBanknote);
+        return new InterimCalculationResult(countNeedBanknote, amount, remainingBanknotes, countMoneyBoxBanknote);
     }
 
     private Map<BanknoteDenomination, Long> getMoneyByAmount(long requestedAmount) {
         long remainingAmount = requestedAmount;
         var result = new HashMap<BanknoteDenomination, Long>();
         for (BanknoteDenomination banknoteDenomination : BanknoteDenomination.values()) {
-            BanknoteInfo banknoteInfo = getBanknoteInfo(remainingAmount, banknoteDenomination);
+            InterimCalculationResult banknoteInfo = getBanknoteInfo(remainingAmount, banknoteDenomination);
             remainingAmount -= banknoteInfo.amountBanknote();
             if ((banknoteInfo.remainingBanknotes()) < 0) {
-                moneyBox.put(banknoteDenomination, 0L);
+                moneyBox.putBanknotes(banknoteDenomination, 0L);
                 result.put(banknoteDenomination, banknoteInfo.countMoneyBoxBanknote());
             } else {
-                moneyBox.put(banknoteDenomination, banknoteInfo.remainingBanknotes());
+                moneyBox.putBanknotes(banknoteDenomination, banknoteInfo.remainingBanknotes());
                 result.put(banknoteDenomination, banknoteInfo.countNeedBanknote());
             }
         }
@@ -84,14 +85,11 @@ public class VirtualAtm implements GettingRemaining, GettingMoney, PuttingMoney 
 
     @Override
     public long getRemainingAmount() {
-        return moneyBox.entrySet().stream()
-            .map(entry -> entry.getValue() * entry.getKey().getBanknote())
-            .reduce(Long::sum)
-            .orElse(0L);
+        return moneyBox.getRemainingAmount();
     }
 
     @Override
     public void putMoney(List<? extends BanknoteDenomination> money) {
-        money.forEach(banknoteDenomination -> moneyBox.merge(banknoteDenomination, 1L, Long::sum));
+        money.forEach(moneyBox::addBanknote);
     }
 }
