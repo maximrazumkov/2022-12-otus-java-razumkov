@@ -7,7 +7,7 @@ import lombok.Builder;
 import ru.otus.jdbc.mapper.EntityClassMetaData;
 
 @Builder
-public class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
+class EntityClassMetaDataImpl<T> implements EntityClassMetaData<T> {
 
     private final String entityName;
     private final Constructor<T> constructor;

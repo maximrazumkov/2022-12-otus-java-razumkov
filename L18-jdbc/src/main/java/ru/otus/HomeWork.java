@@ -18,7 +18,7 @@ import ru.otus.jdbc.mapper.DataTemplateJdbc;
 import javax.sql.DataSource;
 import ru.otus.jdbc.mapper.impl.EntityClassMetaDataFactory;
 import ru.otus.jdbc.mapper.impl.EntityHandlerImpl;
-import ru.otus.jdbc.mapper.impl.EntitySQLMetaDataImpl;
+import ru.otus.jdbc.mapper.impl.EntitySQLMetaDataFactory;
 
 public class HomeWork {
     private static final String URL = "jdbc:postgresql://localhost:5430/demoDB";
@@ -36,7 +36,7 @@ public class HomeWork {
 
 // Работа с клиентом
         EntityClassMetaData<Client> entityClassMetaDataClient = EntityClassMetaDataFactory.of(Client.class);
-        EntitySQLMetaData entitySQLMetaDataClient = new EntitySQLMetaDataImpl<>(entityClassMetaDataClient);
+        EntitySQLMetaData entitySQLMetaDataClient = EntitySQLMetaDataFactory.of(entityClassMetaDataClient);
         EntityHandler<Client> clientEntityHandler = new EntityHandlerImpl<>(entityClassMetaDataClient);
         var dataTemplateClient = new DataTemplateJdbc<>(dbExecutor, entitySQLMetaDataClient, clientEntityHandler); //реализация DataTemplate, универсальная
 
@@ -52,7 +52,7 @@ public class HomeWork {
 // Сделайте тоже самое с классом Manager (для него надо сделать свою таблицу)
 
         EntityClassMetaData<Manager> entityClassMetaDataManager = EntityClassMetaDataFactory.of(Manager.class);
-        EntitySQLMetaData entitySQLMetaDataManager = new EntitySQLMetaDataImpl<>(entityClassMetaDataManager);
+        EntitySQLMetaData entitySQLMetaDataManager = EntitySQLMetaDataFactory.of(entityClassMetaDataManager);
         EntityHandler<Manager> managerEntityHandler = new EntityHandlerImpl<>(entityClassMetaDataManager);
         var dataTemplateManager = new DataTemplateJdbc<Manager>(dbExecutor, entitySQLMetaDataManager, managerEntityHandler);
 

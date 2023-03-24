@@ -16,6 +16,8 @@ public class EntityClassMetaDataFactory {
     private static final String NOT_FOUND_ID = "Not found id in entity %s";
     private static final String NOT_FOUND_CONSTRUCTOR = "Not found constructor in entity %s";
 
+    private EntityClassMetaDataFactory() {}
+
     public static <T> EntityClassMetaDataImpl<T> of(Class<T> clazz) {
         String entityName = clazz.getSimpleName().toLowerCase(Locale.ROOT);
         Constructor<T> constructor = getConstructor(clazz);
