@@ -14,3 +14,4 @@
 7. Patterns. ДЗ - hw15-pattern
 8. Сериализация. ДЗ - hw16-io
 9. Познакомиться с транзакцией в реляционной СУБД и jdbc. ДЗ - hw18-jdbc
+10. Hibernate and JPQL. ДЗ - hw21-jpql-hibernate
