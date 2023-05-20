@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Пользователи</title>
+    <script>
+        function createClient() {
+            const userDataContainer = document.getElementById('userDataContainer');
+            var name = document.getElementById('name').value
+            var address = document.getElementById('address').value
+            var phone = document.getElementById('phone').value
+            fetch('api/client', {
+                method: "POST",
+                body: JSON.stringify({name: name, address: address, phone: phone})
+            }).then(response => window.location.reload())
+        }
+    </script>
+</head>
+
+<body>
+<h4>Добавить клиента</h4>
+    <input type="text" id="name" value="" placeholder="Введите наименование клиента">
+    <input type="text" id="address" value="" placeholder="Введите адрес клиента">
+    <input type="text" id="phone" value="" placeholder="Введите контактный телефон клиента">
+    <button onclick="createClient()">создать</button>
+<pre id="clientDataContainer"></pre>
+
+<h4>Список клиентов</h4>
+<table style="width: 700px">
+    <thead>
+        <tr>
+            <td style="width: 150px">Название</td>
+            <td style="width: 400px">Адрес</td>
+            <td style="width: 150px">Телефон</td>
+        </tr>
+    </thead>
+    <tbody>
+        <#list clients as client>
+            <tr>
+                <td>${client.name}</td>
+                <td>${client.address}</td>
+                <td>${client.phone}</td>
+            </tr>
+        </#list>
+    </tbody>
+</table>
+</body>
+</html>

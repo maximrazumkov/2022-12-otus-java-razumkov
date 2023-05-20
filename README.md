@@ -16,3 +16,4 @@
 9. Познакомиться с транзакцией в реляционной СУБД и jdbc. ДЗ - hw18-jdbc
 10. Hibernate and JPQL. ДЗ - hw21-jpql-hibernate
 11. Типы ссылок. Кэширование. ДЗ - hw22-cache
+12. Web сервер. ДЗ - hw24-webServer
