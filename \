@@ -1,0 +1,41 @@
+# This is a combination of 3 commits.
+# This is the commit message #3:
+
+L28-springDataJdbc
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Mon May 22 12:00:26 2023 +0300
+#
+# interactive rebase in progress; onto 17a759c
+# Last commands done (3 commands done):
+#    squash c190eee L28-springDataJdbc. finish
+#    squash c36322c L28-springDataJdbc
+# No commands remaining.
+# You are currently rebasing branch 'L28-springDataJdbc' on '17a759c'.
+#
+# Changes to be committed:
+#	modified:   L24-webServer/README.md
+#	new file:   L28-springDataJdbc/README.md
+#	new file:   L28-springDataJdbc/build.gradle
+#	new file:   L28-springDataJdbc/docker/runDb.src
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/ClientSpringBootApplication.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/controller/ClientController.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/model/Address.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/model/Client.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/model/Phone.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/repository/AddressRepository.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/repository/ClientRepository.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/service/DBServiceClient.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/crm/service/DbServiceClientImpl.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/dto/ClientDto.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/sessionmanager/TransactionAction.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/sessionmanager/TransactionManager.java
+#	new file:   L28-springDataJdbc/src/main/java/ru/otus/sessionmanager/TransactionManagerSpring.java
+#	new file:   L28-springDataJdbc/src/main/resources/application.yml
+#	new file:   L28-springDataJdbc/src/main/resources/db/migration/V1__initial_schema.sql
+#	new file:   L28-springDataJdbc/src/main/resources/templates/clients.html
+#	modified:   README.md
+#	modified:   settings.gradle
+#

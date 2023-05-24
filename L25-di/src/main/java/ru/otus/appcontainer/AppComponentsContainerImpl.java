@@ -65,7 +65,7 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
     }
 
     private void validateBean(String beanName) {
-        if (nonNull(appComponentsByName.get(beanName))) {
+        if (appComponentsByName.containsKey(beanName)) {
             throw new BeanAlreadyExistException(String.format(BEAN_ALREADY_EXIST_ERROR, beanName));
         }
     }
