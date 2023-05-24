@@ -78,14 +78,9 @@ public class AppComponentsContainerImpl implements AppComponentsContainer {
 
     private List<Method> getMethodsOfClassByAppComponent(Class<?> configClass) {
         return get(Methods.of(configClass)).stream()
-            .sorted(this::compareMethodsByAppComponentsContainerConfig)
             .filter(method -> method.isAnnotationPresent(AppComponent.class))
+            .sorted(Comparator.comparingInt(m -> m.getAnnotation(AppComponent.class).order()))
             .collect(Collectors.toList());
-    }
-
-    private int compareMethodsByAppComponentsContainerConfig(Method m1, Method m2) {
-        return m1.getAnnotation(AppComponent.class).order()
-            - m2.getAnnotation(AppComponent.class).order();
     }
 
     private void checkConfigClass(Class<?> configClass) {
