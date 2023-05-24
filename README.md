@@ -18,3 +18,4 @@
 11. Типы ссылок. Кэширование. ДЗ - hw22-cache
 12. Web сервер. ДЗ - hw24-webServer
 13. Spring Data Jdbc. ДЗ - L28-springDataJdbc
+14. Dependency injection. ДЗ - hw25-di
