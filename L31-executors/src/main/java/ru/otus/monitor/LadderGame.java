@@ -1,15 +1,17 @@
 package ru.otus.monitor;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LadderGame {
     private static final Logger logger = LoggerFactory.getLogger(LadderGame.class);
-    private String last;
+    private BlockingQueue<String> queue;
     private final int count;
 
-    public LadderGame(String last, int count) {
-        this.last = last;
+    public LadderGame(BlockingQueue<String> queue, int count) {
+        this.queue = queue;
         this.count = count;
     }
 
@@ -17,9 +19,12 @@ public class LadderGame {
         int approach = step;
         while(step != 0) {
             try {
-                while (last.equals(Thread.currentThread().getName())) {
+                String currentThreadName = Thread.currentThread().getName();
+                while (!queue.peek().equals(currentThreadName)) {
                     this.wait();
                 }
+                String poll = queue.take();
+                queue.put(poll);
                 logger.info(String.valueOf(step));
                 if (approach < count) {
                     ++step;
@@ -27,7 +32,6 @@ public class LadderGame {
                 } else {
                     --step;
                 }
-                last = Thread.currentThread().getName();
                 sleep();
                 notifyAll();
             } catch (InterruptedException ex) {
@@ -37,7 +41,10 @@ public class LadderGame {
     }
 
     public static void main(String[] args) {
-        LadderGame ladderGame = new LadderGame("Поток 2", 10);
+        BlockingQueue<String> queue = new ArrayBlockingQueue<>(2);
+        queue.add("Поток 1");
+        queue.add("Поток 2");
+        LadderGame ladderGame = new LadderGame(queue, 10);
         Thread thread1 = new Thread(() -> ladderGame.run(1));
         thread1.setName("Поток 1");
 
