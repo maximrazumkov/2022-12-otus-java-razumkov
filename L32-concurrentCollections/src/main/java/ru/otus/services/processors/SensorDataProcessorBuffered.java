@@ -1,10 +1,9 @@
 package ru.otus.services.processors;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Queue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.slf4j.Logger;
@@ -19,7 +18,7 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
 
     private final int bufferSize;
     private final SensorDataBufferedWriter writer;
-    private final PriorityBlockingQueue<SensorData> sensorDataPriorityBlockingQueue;
+    private final Queue<SensorData> sensorDataPriorityBlockingQueue;
     private final AtomicBoolean atomicBoolean = new AtomicBoolean(true);
 
     public SensorDataProcessorBuffered(int bufferSize, SensorDataBufferedWriter writer) {
@@ -30,7 +29,7 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
 
     @Override
     public void process(SensorData data) {
-        sensorDataPriorityBlockingQueue.put(data);
+        sensorDataPriorityBlockingQueue.offer(data);
         if (sensorDataPriorityBlockingQueue.size() >= bufferSize) {
             flush();
         }
