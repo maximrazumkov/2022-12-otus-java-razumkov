@@ -1,5 +1,6 @@
 package ru.otus.services.processors;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,7 +36,7 @@ public class SensorDataProcessorBuffered implements SensorDataProcessor {
     public synchronized void flush() {
         try {
             if (!sensorDataPriorityBlockingQueue.isEmpty()) {
-                List<SensorData> sensorDataList = new CopyOnWriteArrayList<>();
+                List<SensorData> sensorDataList = new ArrayList<>();
                 SensorData sensorData;
                 while ((sensorData = sensorDataPriorityBlockingQueue.poll()) != null) {
                     sensorDataList.add(sensorData);
