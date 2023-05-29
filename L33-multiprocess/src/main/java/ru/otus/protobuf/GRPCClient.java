@@ -1,16 +1,14 @@
 package ru.otus.protobuf;
 
-import static java.util.Objects.isNull;
 import static ru.otus.protobuf.util.Utils.sleep;
 
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.extern.slf4j.Slf4j;
-import ru.otus.protobuf.generated.NumberFromInterval;
 import ru.otus.protobuf.generated.RemoteDBServiceGrpc;
 import ru.otus.protobuf.generated.Interval;
-import ru.otus.protobuf.observer.QueueStreamObserver;
+import ru.otus.protobuf.observer.NumberStreamObserver;
 
 @Slf4j
 public class GRPCClient {
@@ -24,16 +22,15 @@ public class GRPCClient {
 
     public void run(String serverHost, int serverPort) {
         var channel = getChannel(serverHost, serverPort);
-        var queue = new ArrayBlockingQueue<NumberFromInterval>(1);
-        QueueStreamObserver queueStreamObserver = new QueueStreamObserver(queue);
+        var numberFromServer = new AtomicInteger(0);
+        NumberStreamObserver queueStreamObserver = new NumberStreamObserver(numberFromServer);
         Interval interval = getInterval(0, 30);
         var newStub = RemoteDBServiceGrpc.newStub(channel);
         newStub.getNumbersFromInterval(interval, queueStreamObserver);
         int currentValue = 0;
         for (int i = 0; i <= 50; ++i) {
             sleep(1);
-            NumberFromInterval numberFromInterval = queue.poll();
-            int lastNumFromServer = isNull(numberFromInterval) ? 0 : numberFromInterval.getValue();
+            int lastNumFromServer = numberFromServer.getAndSet(0);
             log.info("number from server: " + lastNumFromServer);
             currentValue += lastNumFromServer + 1;
             log.info("currentValue: " + currentValue);

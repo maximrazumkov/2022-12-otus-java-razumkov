@@ -1,20 +1,20 @@
 package ru.otus.protobuf.observer;
 
 import io.grpc.stub.StreamObserver;
-import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.protobuf.generated.NumberFromInterval;
 
 @Slf4j
 @RequiredArgsConstructor
-public class QueueStreamObserver implements StreamObserver<NumberFromInterval> {
+public class NumberStreamObserver implements StreamObserver<NumberFromInterval> {
 
-    private final BlockingQueue<NumberFromInterval> queue;
+    private final AtomicInteger value;
 
     @Override
     public void onNext(NumberFromInterval numberFromInterval) {
-        queue.offer(numberFromInterval);
+        value.set(numberFromInterval.getValue());
     }
 
     @Override

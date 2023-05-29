@@ -20,6 +20,7 @@ public class GRPCServer {
         var remoteDBService = new RemoteDBServiceImpl();
         var server = getServer(serverPort, remoteDBService);
         server.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(server::shutdown));
         log.info("server waiting for client connections...");
         server.awaitTermination();
     }
