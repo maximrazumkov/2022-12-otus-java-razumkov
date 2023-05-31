@@ -20,3 +20,4 @@
 13. Dependency injection. ДЗ - hw25-di
 14. Spring Data Jdbc. ДЗ - L28-springDataJdbc
 15. Executors. ДЗ - hw31-executors
+16. Потокобезопасные коллекции. ДЗ - hw32--concurrentCollections
